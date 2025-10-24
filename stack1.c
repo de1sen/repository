@@ -69,15 +69,20 @@ void init(Stack * st)
 
 void push(Stack * st, Data d)
 {
-    st->a[st->size] = d;
-    st->size ++;
+    if (!is_full(st)) {
+        st->a[st->size] = d;
+        st->size ++;
+    }
 }
 
 Data pop(Stack * st)
 {
-    Data res = st->a[st->size - 1];
-    st->size --;
-    return res;
+    if (!is_empty(st)) {   
+        Data res = st->a[st->size - 1];
+        st->size --;
+        return res;
+    }
+    return 0;
 }
 
 int is_empty(Stack *st)
