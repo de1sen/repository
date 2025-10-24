@@ -13,6 +13,7 @@ void print(Stack * st);
 void init(Stack * st);
 void push(Stack * st, Data d);
 Data pop(Stack * st);
+int is_empty(Stack * st);
 
 int main(void)
 {
@@ -21,9 +22,13 @@ int main(void)
     Stack * st = &s;
 
     init(st);
+    printf("empty : %s\n", is_empty(st) ? "YES" : "NO"); // YES
+
     push(st,7);
     push(st,7);
     push(st,7);
+    printf("empty : %s\n", is_empty(st) ? "YES" : "NO");  // NO
+
     print(st); // 7 7 7
 
     pop(st); 
@@ -56,3 +61,10 @@ Data pop(Stack * st)
     st->size --;
     return res;
 }
+
+int is_empty(Stack *st)
+{
+    return st->size == 0;
+}
+
+
