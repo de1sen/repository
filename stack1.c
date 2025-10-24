@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #define N 8
 
@@ -16,26 +17,40 @@ Data pop(Stack * st);
 int is_empty(Stack * st);
 int is_full(Stack * st);
 
-int main(void)
+int main()
 {
-    Stack s;
-
-    Stack * st = &s;
+    Stack stack;            // создаем стек
+    Stack * st = &stack;    // указатель на созданный стек
 
     init(st);
-    printf("empty : %s\n", is_empty(st) ? "YES" : "NO"); // YES
+    printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
+    printf("full: %s\n", is_full(st) ? "YES" : "NO");   // NO
+    print(st);              // ничего не печатается
 
-    push(st,7);
-    push(st,7);
-    push(st,7);
-    printf("empty : %s\n", is_empty(st) ? "YES" : "NO");  // NO
+    Data test[] = {5, 17, -3, 0, 1, 2, 3, 4};
+    // проверили, что чисел столько, сколько размер стека
+    assert(sizeof(test) == sizeof(st->a));
 
-    print(st); // 7 7 7
+    Data d;
+    // тесты для push
+    for(int i = 0; i < N; i++) {
+        d = test[i];
+        printf("push %d :", d);
+        push(st, d);
+        print(st);
+        printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // NO
+    }
 
-    pop(st); 
-    print(st); // 7 7
+    printf("full: %s\n", is_full(st) ? "YES" : "NO");   // YES
 
-    printf("full : %s\n", is_full(st) ? "YES" : "NO"); // NO
+    // тесты для pop
+    for(int i = 0; i < N; i++) {
+        d = pop(st);
+        printf("pop %d :", d);
+        print(st);      // pop -3: 5 17
+    }
+    printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
+    printf("full: %s\n", is_full(st) ? "YES" : "NO");   // NO
 
     return 0;
 }
