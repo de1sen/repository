@@ -14,6 +14,7 @@ void init(Stack * st);
 void push(Stack * st, Data d);
 Data pop(Stack * st);
 int is_empty(Stack * st);
+int is_full(Stack * st);
 
 int main(void)
 {
@@ -33,7 +34,9 @@ int main(void)
 
     pop(st); 
     print(st); // 7 7
- 
+
+    printf("full : %s\n", is_full(st) ? "YES" : "NO"); // NO
+
     return 0;
 }
 
@@ -67,4 +70,8 @@ int is_empty(Stack *st)
     return st->size == 0;
 }
 
+int is_full(Stack *st)
+{
+    return st->size == sizeof(st->a)/sizeof(st->a[0]);
+}
 
