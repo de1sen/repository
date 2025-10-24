@@ -9,21 +9,29 @@ typedef struct {
     unsigned int n;  // сколько элементов хранится в стеке
 } Stack;
 
-void print(Stack * st)
-{
-    for (int i = 0; i  < st->n; i++)
-        printf("%d ", st->a[i]);
-    printf("\n");
-}
+void print(Stack * st);
+void init(Stack * st);
 
 int main(void)
 {
-    Stack s = {{7,4,1}, 3};
+    Stack s;
 
     Stack * st = &s;
 
+    init(st);
     print(st);
 
     return 0;
 }
 
+void print(Stack * st)
+{
+    for (unsigned int i = 0; i  < st->n; i++)
+        printf("%d ", st->a[i]);
+    printf("\n");
+}
+
+void init(Stack * st)
+{
+    st->n = 0;
+}
