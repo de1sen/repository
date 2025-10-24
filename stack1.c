@@ -11,6 +11,7 @@ typedef struct {
 
 void print(Stack * st);
 void init(Stack * st);
+void push(Stack * st, Data d);
 
 int main(void)
 {
@@ -34,4 +35,10 @@ void print(Stack * st)
 void init(Stack * st)
 {
     st->n = 0;
+}
+
+void push(Stack * st, Data d)
+{
+    st->a[st->n] = d;
+    st->n ++;
 }
