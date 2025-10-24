@@ -6,12 +6,13 @@ typedef int Data;
 
 typedef struct {
     Data a[N];   // данные
-    unsigned int n;  // сколько элементов хранится в стеке
+    unsigned int size;  // сколько элементов хранится в стеке
 } Stack;
 
 void print(Stack * st);
 void init(Stack * st);
 void push(Stack * st, Data d);
+Data pop(Stack * st);
 
 int main(void)
 {
@@ -20,25 +21,38 @@ int main(void)
     Stack * st = &s;
 
     init(st);
-    print(st);
+    push(st,7);
+    push(st,7);
+    push(st,7);
+    print(st); // 7 7 7
 
+    pop(st); 
+    print(st); // 7 7
+ 
     return 0;
 }
 
 void print(Stack * st)
 {
-    for (unsigned int i = 0; i  < st->n; i++)
+    for (unsigned int i = 0; i  < st->size; i++)
         printf("%d ", st->a[i]);
     printf("\n");
 }
 
 void init(Stack * st)
 {
-    st->n = 0;
+    st->size = 0;
 }
 
 void push(Stack * st, Data d)
 {
-    st->a[st->n] = d;
-    st->n ++;
+    st->a[st->size] = d;
+    st->size ++;
+}
+
+Data pop(Stack * st)
+{
+    Data res = st->a[st->size - 1];
+    st->size --;
+    return res;
 }
