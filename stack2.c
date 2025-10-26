@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #define N 10            // на сколько будет изменяться размер стека в штуках
 
 typedef int Data;
 
 typedef struct {
-    Data a[N];          // данные
-    unsigned int size;  // сколько элементов хранится в стеке
-} Stack;
+    Data * a;           // данные
+    unsigned int n;  // сколько элементов хранится в стеке
+    size_t size;        // для скольки элементов выделена память
+} Stack;    
 
 void print(Stack * st);
 void init(Stack * st);
@@ -16,6 +18,7 @@ void push(Stack * st, Data d);
 Data pop(Stack * st);
 int is_empty(Stack * st);
 int is_full(Stack * st);
+void destroy(Stack * st);
 
 int main()
 {
@@ -25,11 +28,9 @@ int main()
     init(st);
     printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
     printf("full: %s\n", is_full(st) ? "YES" : "NO");   // NO
-    print(st);          // ничего не печатается
+    print(st);          // ничего не печатается 
 
     Data test[] = {5, 17, -3, 0, 1, 2, 3, 4};
-    // проверили, что чисел столько, сколько размер стека
-    assert(sizeof(test) == sizeof(st->a));
 
     Data d;
     // тесты для push
@@ -52,49 +53,59 @@ int main()
     printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
     printf("full: %s\n", is_full(st) ? "YES" : "NO");   // NO
 
+    destroy(st);
+
     return 0;
 }
 
 void print(Stack * st)
 {
-    for (unsigned int i = 0; i  < st->size; i++)
+    for (unsigned int i = 0; i  < st->n; i++)
         printf("%d ", st->a[i]);
     printf("\n");
 }
 
 void init(Stack * st)
 {
+    st->n = 0;
     st->size = 0;
+    st->a = NULL;    
 }
 
 void push(Stack * st, Data d)
 {
-    if (!is_full(st)) {
-        st->a[st->size] = d;
-        st->size ++;
+    if (is_full(st)) {
+        st->size += N;
+        st->a = realloc(st->a, st->size * sizeof(Data));    
     }
-    else
-        printf("Stack is full");
+    st->a[st->n] = d;
+    st->n ++;
 }
 
 Data pop(Stack * st)
 {
     if (!is_empty(st)) {   
-        Data res = st->a[st->size - 1];
-        st->size --;
+        Data res = st->a[st->n - 1];
+        st->n --;
         return res;
     }
-    else
-        printf("Stack is empty");   
+    return 0; 
 }
 
 int is_empty(Stack *st)
 {
-    return st->size == 0;
+    return st->n == 0;
 }
 
 int is_full(Stack *st)
 {
-    return st->size == sizeof(st->a)/sizeof(st->a[0]);
+    return st->n == st->size;
 }
 
+void destroy(Stack * st)
+{
+    free(st->a);
+    st->n = 0;
+    st->size = 0;
+    st->a = NULL;
+}
