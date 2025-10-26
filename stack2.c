@@ -19,18 +19,16 @@ Data pop(Stack * st);
 int is_empty(Stack * st);
 int is_full(Stack * st);
 void destroy(Stack * st);
+Stack * create();
 
 int main()
 {
-    Stack stack;        // создаем стек
-    Stack * st = &stack;// указатель на созданный стек
+    Data test[N] = {5, 17, -3, 0, 1, 2, 3, 4,8,13};
+    Stack * st = create();      // создаём стек
 
-    init(st);
     printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
     printf("full: %s\n", is_full(st) ? "YES" : "NO");   // NO
     print(st);          // ничего не печатается 
-
-    Data test[] = {5, 17, -3, 0, 1, 2, 3, 4};
 
     Data d;
     // тесты для push
@@ -105,7 +103,12 @@ int is_full(Stack *st)
 void destroy(Stack * st)
 {
     free(st->a);
-    st->n = 0;
-    st->size = 0;
-    st->a = NULL;
+    free(st);
+}
+
+Stack * create()
+{
+    Stack * st = malloc(sizeof(Stack));
+    init(st);
+    return st;
 }
