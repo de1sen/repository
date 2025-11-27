@@ -11,22 +11,22 @@ struct Node
 
 void print(Node * list);
 void push(Node ** ptr_list, node_type value);
+int is_empty(Node * list);
 
 int main(void)
 {
+    node_type test[] = {3, 7, 13, 10};
     Node * list = NULL;
-    Node a = {3}, b = {7}, c = {13};
-    list = &a;
+    printf("Empty: %s\n", is_empty(list) ? "YES" : "NO");
 
-    a.next = &b;
-    b.next = &c;
-    c.next = NULL;
+    for (size_t i = 0; i < sizeof(test)/sizeof(test[0]); i++)
+    {
+        push(&list, test[i]);
+        print(list);
+    }
 
-    print(list);
+    printf("Empty: %s\n", is_empty(list) ? "YES" : "NO");
 
-    push(&list, 10);
-
-    print(list);
     return 0;
 }
 
@@ -43,4 +43,9 @@ void push(Node ** ptr_list, node_type value)
     ptr->data = value;
     ptr->next = *ptr_list;
     *ptr_list = ptr;
+}
+
+int is_empty(Node * list)
+{
+    return list == NULL;
 }
