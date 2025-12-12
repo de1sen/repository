@@ -70,3 +70,16 @@ node_type pop(Node ** ptr_list)
 
     return res;
 }
+
+void list_destroy(Node * list)
+{
+    Node * current = list;
+    Node * next;
+    
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
