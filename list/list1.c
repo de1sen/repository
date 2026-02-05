@@ -13,31 +13,63 @@ void print(Node * list);
 void push(Node ** ptr_list, node_type value);
 int is_empty(Node * list);
 node_type pop(Node ** ptr_list);
+void list_destroy(Node * list);
+node_type find_kth_from_end(Node * list, int k);
 
 int main(void)
 {
-    node_type test[] = {3, 7, 13, 10};
     Node * list = NULL;
-    printf("Empty: %s\n", is_empty(list) ? "YES" : "NO");
-
-    for (size_t i = 0; i < sizeof(test)/sizeof(test[0]); i++)
-    {
-        push(&list, test[i]);
-        print(list);
-    }
-
-    printf("Empty: %s\n", is_empty(list) ? "YES" : "NO");
     
-    while(!is_empty(list))
-    {
-        int popped_item = pop(&list);
-        printf("pop %d : ", popped_item);
-        print(list);
-    }
-
-    printf("Empty: %s\n", is_empty(list) ? "YES" : "NO");
-
+    // Заполняем список
+    push(&list, 7);
+    push(&list, 15);
+    push(&list, 22);
+    push(&list, 52);
+    push(&list, 2);
+    
+    printf("List: ");
+    print(list);
+    
+    int k;
+    printf("Enter k (from end): ");
+    scanf("%d", &k);
+    
+    node_type result = find_kth_from_end(list, k);
+    
+    if (result != -1)  
+        printf("%d-th element from end: %d\n", k, result);
+    else
+        printf("Invalid k or empty list\n");
+    
+    list_destroy(list);
+    
     return 0;
+}
+
+node_type find_kth_from_end(Node * list, int k)
+{
+    if (list == NULL || k <= 0) {
+        printf("Error: Empty list or invalid k\n");
+        return -1;  
+    }
+    
+    Node * fast = list;
+    Node * slow = list;
+    
+    for (int i = 0; i < k; i++) {
+        if (fast == NULL) {
+            printf("Error: k is larger than list size\n");
+            return -1;
+        }
+        fast = fast->next;
+    }
+    
+    while (fast != NULL) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    
+    return slow->data;
 }
 
 void print(Node * list)
@@ -62,6 +94,11 @@ int is_empty(Node * list)
 
 node_type pop(Node ** ptr_list)
 {
+    if (*ptr_list == NULL) {
+        printf("Error: Cannot pop from empty list\n");
+        return -1;
+    }
+    
     Node * ptr = *ptr_list;
     node_type res = ptr->data;
     

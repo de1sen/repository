@@ -1,31 +1,30 @@
-// стек в 1 malloc 
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
 
-#define N 10            // на сколько будет изменяться размер стека в штуках
+#define MAXSIZE 10          // на сколько будет изменяться размер стека в штуках
 
 typedef int Data;
 
-typedef struct {           
+typedef struct {
+    Data * a;           // данные
     unsigned int n;     // сколько элементов хранится в стеке
-    size_t size;        // ёмкость стека(для скольки элементов выделена память)
-    Data a[1];          // данные    
+    size_t size;        // для скольки элементов выделена память
 } Stack;    
 
-void print(Stack *st);
-void init(Stack *st);
-void push(Stack **pst, Data d);
-Data pop(Stack *st);
-int is_empty(Stack *st);
-int is_full(Stack *st);
-void clear(Stack *st);
-Stack * destroy(Stack *st);
+void print(Stack * st);
+void init(Stack * st);
+void push(Stack * st, Data d);
+Data pop(Stack * st);
+int is_empty(Stack * st);
+int is_full(Stack * st);
+void clear(Stack * st);
+Stack * destroy(Stack * st);
 Stack * create();
 
-int main(void)
+int main()
 {
-    Data test[N] = {5, 17, -3, 0, 1, 2, 3, 4,8,13};
+    Data test[MAXSIZE] = {5, 17, -3, 0, 1, 2, 3, 4,8,13};
     Stack * st = create();      // создаём стек
 
     printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // YES
@@ -34,10 +33,10 @@ int main(void)
 
     Data d;
     // тесты для push
-    for(int i = 0; i < N; i++) {
+    for(int i = 0; i < MAXSIZE; i++) {
         d = test[i];
         printf("push %d :", d);
-        push(&st, d);
+        push(st, d);
         print(st);
         printf("empty: %s\n", is_empty(st) ? "YES" : "NO"); // NO
     }
@@ -45,7 +44,7 @@ int main(void)
     printf("full: %s\n", is_full(st) ? "YES" : "NO");   // YES
 
     // тесты для pop
-    for(int i = 0; i < N; i++) {
+    for(int i = 0; i < MAXSIZE; i++) {
         d = pop(st);
         printf("pop %d :", d);
         print(st);      // pop -3: 5 17
@@ -58,25 +57,31 @@ int main(void)
     return 0;
 }
 
-void print(Stack *st)
+void print(Stack * st)
 {
     for (unsigned int i = 0; i  < st->n; i++)
         printf("%d ", st->a[i]);
     printf("\n");
 }
 
-void push(Stack **pst, Data data)
+void init(Stack * st)
 {
-    if (is_full(*pst)) {
-        (*pst)->size += N;
-        *pst  = realloc(*pst, sizeof(Stack) + (*pst)->size * sizeof(Data));    
+    st->n = 0;
+    st->size = 0;
+    st->a = NULL;    
+}
+
+void push(Stack * st, Data d)
+{
+    if (is_full(st)) {
+        st->size += MAXSIZE;
+        st->a = realloc(st->a, st->size * sizeof(Data));    
     }
-    Stack * st = *pst;
-    st->a[st->n] = data;
+    st->a[st->n] = d;
     st->n ++;
 }
 
-Data pop(Stack *st)
+Data pop(Stack * st)
 {
     if (!is_empty(st)) {   
         Data res = st->a[st->n - 1];
@@ -96,17 +101,23 @@ int is_full(Stack *st)
     return st->n == st->size;
 }
 
+void clear(Stack * st)
+{
+    free(st->a);    
+    init(st);
+}
+
 Stack * create()
 {
-    Stack * st = malloc(sizeof(Stack) + sizeof(Data) * N);
-    st->size = N;
-    st->n = 0;
+    Stack * st = malloc(sizeof(Stack));
+    init(st);
     return st;
 }
 
 Stack * destroy(Stack * st)
 {
     if (st != NULL) {
+        free(st->a);
         free(st);
     }
     return NULL;
